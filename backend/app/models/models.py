@@ -66,9 +66,9 @@ class Posts(db.Model):
      content=db.Column(db.Text, nullable=False)
      created_at = db.Column(db.DateTime, default=datetime.utcnow, index=True)
      processed= db.Column(db.Boolean, default=False)
-     quality_score=db.Column(db.Integer, default=0)
+     sentiment_score=db.Column(db.Integer, default=0)
      user_id= db.Column(db.Integer(), db.ForeignKey('cust.id'), nullable=False, index=True)
-     sentiment_id = db.Column(db.Integer(), db.ForeignKey('sentiment.id'), nullable=False, index=True)
+     sentiment = db.Column(db.String(10))
      symbol_id =  db.Column(db.Integer(), db.ForeignKey('symbol.id'), nullable=False, index=True)
      image_attachment = db.Column(db.String())
 
@@ -78,9 +78,10 @@ class Posts(db.Model):
              'created_at': self.created_at.isoformat() if self.created_at else None,
              'content': self.content,
              'user_id': self.user_id,
-             'sentiment_id': self.sentiment_id,
+             'sentiment': self.sentiment,
              'symbol_id': self.symbol_id,
-             'image_attachment': self.image_attachment
+             'image_attachment': self.image_attachment,
+             'sentiment_score': self.sentiment_score
          }
 
 

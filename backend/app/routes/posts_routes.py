@@ -23,3 +23,13 @@ def init_routes(app):
 
         except ValueError as e:
             return jsonify({'error': str(e)}), 400
+
+    @app.route('/api/posts/<user_id>', methods=['GET'])
+    def get_posts(user_id):
+        try:
+           posts = PostService.get_posts(user_id)
+           posts_list = [post.to_dict() for post in posts]
+           return jsonify({'posts': posts_list}), 200
+
+        except ValueError as e:
+            return jsonify({'error': str(e)}), 404
