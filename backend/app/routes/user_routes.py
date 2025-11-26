@@ -13,3 +13,10 @@ def init_routes(app):
         except ValueError as e:
             return jsonify({'error': str(e)}), 400
 
+    @app.route('/api/users/<username>', methods=['GET'])
+    def get_user(username):
+        try:
+            user = UserService.getUser(username)
+            return jsonify({'user': user.to_dict()}), 200
+        except ValueError as e:
+            return jsonify({'error': str(e)}), 400

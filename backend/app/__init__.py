@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 # Initialize DB here (outside create_app to avoid circular imports)
 db = SQLAlchemy()
-
+from flask_cors import CORS
 
 def create_app():
     app = Flask(__name__)
@@ -12,7 +12,7 @@ def create_app():
 
     # Initialize db with app
     db.init_app(app)
-
+    CORS(app)
     from app.models.models import User
     from app.models.models import Posts
 

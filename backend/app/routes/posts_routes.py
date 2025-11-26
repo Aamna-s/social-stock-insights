@@ -17,12 +17,7 @@ def init_routes(app):
 
         try:
             # 2. Call service
-            post = PostService.create_post(
-                user_id=data.user,
-                content=data['content'],
-                sentiment=data.get('sentiment'),
-                symbol=data.symbol
-            )
+            post = PostService.create_post(data)
             # 3. Return formatted response
             return jsonify({'post': post.to_dict()}), 201
 
