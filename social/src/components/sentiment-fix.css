@@ -1,0 +1,22 @@
+/* Sentiment Colors - Add to Dashboard.css */
+.post-sentiment {
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.post-sentiment.bullish {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.post-sentiment.bearish {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.post-sentiment.neutral {
+    background: #e0e7ff;
+    color: #3730a3;
+}
