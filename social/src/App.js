@@ -5,6 +5,7 @@ import SignIn from './components/SignIn';
 import SignUp from './components/SignUp';
 import Dashboard from './components/Dashboard';
 import CreatePost from './components/CreatePost';
+import MyPosts from './components/MyPosts';
 import './App.css';
 
 function App() {
@@ -46,6 +47,14 @@ function App() {
               element={
                 <SignedIn>
                   <CreatePost />
+                </SignedIn>
+              }
+            />
+            <Route
+              path="/my-posts"
+              element={
+                <SignedIn>
+                  <MyPosts />
                 </SignedIn>
               }
             />

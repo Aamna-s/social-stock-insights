@@ -71,17 +71,43 @@ class Posts(db.Model):
      sentiment = db.Column(db.String(10))
      symbol_id =  db.Column(db.Integer(), db.ForeignKey('symbol.id'), nullable=False, index=True)
      image_attachment = db.Column(db.String())
-
+     likes_count = db.Column(db.Integer, default=0)
+     user = db.relationship("User", lazy="joined")
+     symbol = db.relationship("Symbol", lazy="joined")
      def to_dict(self):
          return {
              'id': self.id,
              'created_at': self.created_at.isoformat() if self.created_at else None,
              'content': self.content,
-             'user_id': self.user_id,
+             'user_id': User.query.filter_by(id=self.user_id).first().first_name ,
              'sentiment': self.sentiment,
-             'symbol_id': self.symbol_id,
+             'symbol_id': Symbol.query.filter_by(id= self.symbol_id).first().code,
              'image_attachment': self.image_attachment,
-             'sentiment_score': self.sentiment_score
+             'sentiment_score': self.sentiment_score,
+             'likes_count': self.likes_count
          }
 
 
+class Comment(db.Model):
+    __tablename__ = 'comment'
+
+    id = db.Column(db.Integer(), primary_key=True)
+    content = db.Column(db.String(10))
+    parent_id = db.Column(db.Integer(), db.ForeignKey('comment.id'), nullable=True, index=True)
+    post_id = db.Column(db.Integer(), db.ForeignKey('posts.id'), nullable=False, index=True)
+    is_active = db.Column(db.Boolean, default=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('cust.id'), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    user = db.relationship("User", lazy="joined")
+    replies = db.relationship("Comment", lazy="joined")
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'content': self.content,
+            'parent_id': self.parent_id,
+            'post_id': self.post_id,
+            'user_id': self.user_id,
+            'is_active': self.is_active,
+            'created_at': self.created_at.isoformat() if self.created_at else None
+        }

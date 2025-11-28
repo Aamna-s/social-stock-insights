@@ -69,7 +69,7 @@ const CreatePost = ({ onSuccess, onCancel }) => {
                 messages: [
                     {
                         role: "system",
-                        content: "You are a financial sentiment analyzer. Analyze the given text and return a JSON object with the following fields: 'sentiment' (must be one of: 'Bullish', 'Bearish', 'Neutral'), 'score' (confidence score between 0 and 100), and 'symbol' (extracted stock ticker if present, e.g. 'TSLA', otherwise null). Do not include any other text."
+                        content: "You are a financial sentiment analyzer. Analyze the given text and determine the sentiment for the PRIMARY stock symbol mentioned (the first one or most prominent). Return a JSON object with: 'sentiment' (must be one of: 'Bullish', 'Bearish', 'Neutral'), 'score' (confidence score between 0 and 100), and 'symbol' (the primary stock ticker, e.g. 'TSLA', or null). Rules: 'buying' or 'going up' = Bullish, 'selling' or 'going down' = Bearish. Focus on the main stock being discussed. Do not include any other text."
                     },
                     {
                         role: "user",
@@ -152,7 +152,6 @@ const CreatePost = ({ onSuccess, onCancel }) => {
                 imageAttachment: attachment,
             }));
 
-            // Commented out as per user request for debugging
             const response = await fetch('http://localhost:5000/api/posts', {
                 method: 'POST',
                 headers: {
@@ -164,7 +163,6 @@ const CreatePost = ({ onSuccess, onCancel }) => {
                     symbol: symbol.trim() || (currentAnalysis?.symbol || ''),
                     sentiment: currentAnalysis ? currentAnalysis.sentiment : 'Neutral',
                     sentimentScore: currentAnalysis ? currentAnalysis.score : 0,
-                    sentimentReasoning: currentAnalysis ? currentAnalysis.reasoning : '',
                     imageAttachment: attachment,
                 }),
             });
@@ -177,7 +175,7 @@ const CreatePost = ({ onSuccess, onCancel }) => {
             const result = await response.json();
             console.log('Post created:', result);
 
-            setMessage('Post created successfully! (Simulation)');
+            setMessage('Post created successfully!');
 
             // Call onSuccess prop if provided
             if (onSuccess) {
@@ -249,7 +247,6 @@ const CreatePost = ({ onSuccess, onCancel }) => {
                                         Confidence: {analysis?.score}%
                                     </span>
                                 </div>
-                                <p style={{ margin: 0, fontSize: '0.9em', color: '#334155' }}>{analysis?.reasoning}</p>
                             </div>
                         )}
                     </div>

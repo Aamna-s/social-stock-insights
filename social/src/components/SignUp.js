@@ -36,10 +36,10 @@ const SignUp = () => {
         }
 
         const data = {
-            username:username,
-            password:password,
-            firstName:firstName,
-            lastName:lastName,
+            username: username,
+            password: password,
+            firstName: firstName,
+            lastName: lastName,
             profilePicture: base64Pic
         };
 
@@ -75,6 +75,21 @@ const SignUp = () => {
             if (result.status === 'complete') {
                 // Post data to backend before setting active session to avoid unmounting issues
                 await post(username, password, firstName, lastName, pic);
+
+                // Fetch user data from API and store in localStorage (consistent with SignIn.js)
+                try {
+                    const userResponse = await fetch(`http://localhost:5000/api/users/${username}`);
+                    if (userResponse.ok) {
+                        const userData = await userResponse.json();
+                        // Handle both possible structures (userData.user or just userData)
+                        const userToSave = userData.user || userData;
+                        localStorage.setItem('user', JSON.stringify(userToSave));
+                        console.log('User data stored in localStorage:', userToSave);
+                    }
+                } catch (error) {
+                    console.error('Error fetching user data for localStorage:', error);
+                }
+
                 await setActive({ session: result.createdSessionId });
                 window.location.href = '/dashboard';
             } else {
