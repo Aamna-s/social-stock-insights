@@ -43,6 +43,20 @@ def init_routes(app):
         except Exception as e:
             return jsonify({'error': 'An error occurred while fetching posts'}), 500
 
+    @app.route('/api/posts/symbol/<symbol_code>', methods=['GET'])
+    def get_posts_by_symbol(symbol_code):
+        """Get all posts for a specific user"""
+        try:
+            posts = PostService.get_posts_by_symbol(symbol_code)
+
+            # Use serializer to format response
+            schema = PostSerializer(many=True)
+            return jsonify({'posts': schema.dump(posts)}), 200
+
+        except ValueError as e:
+            return jsonify({'error': str(e)}), 404
+        except Exception as e:
+            return jsonify({'error': 'An error occurred while fetching posts'}), 500
     @app.route('/api/posts', methods=['GET'])
     def get_all_posts():
         """Get all posts"""
@@ -89,7 +103,19 @@ def init_routes(app):
     @app.route('/api/posts/<post_id>/comments', methods=['GET'])
     def get_comments(post_id):
         try:
-            comments = PostService.get_comment(post_id)
+            comments = PostService.get_comments_with_replies(post_id)
+
+            return jsonify({'comments': comments}), 200
+
+        except ValueError as e:
+            return jsonify({'error': str(e)}), 404
+        except Exception as e:
+            return jsonify({'error': 'An error occurred while fetching comments'}), 500
+
+    @app.route('/api/posts/<post_id>/comments/<comment_id>/replies', methods=['GET'])
+    def get_comments_replies(comment_id):
+        try:
+            comments = PostService.get_comments_replies(comment_id)
 
             schema = CommentDetailSerializer(many=True)
             return jsonify({'comments': schema.dump(comments)}), 200

@@ -23,7 +23,9 @@ class UserSerializer(Schema):
     is_active = fields.Bool(dump_default=True)
     created_at = fields.DateTime(dump_only=True)
     updated_at = fields.DateTime(dump_only=True)
-
+    reputation_score = fields.Float()
+    post_count = fields.Int()
+    post_quality_avg = fields.Float()
     class Meta:
         unknown = EXCLUDE
 
@@ -35,7 +37,9 @@ class UserPublicSerializer(Schema):
     first_name = fields.Str()
     last_name = fields.Str()
     profile_picture = fields.Str()
-
+    reputation_score = fields.Int()
+    post_count = fields.Int()
+    post_quality_avg = fields.Int()
     class Meta:
         unknown = EXCLUDE
 

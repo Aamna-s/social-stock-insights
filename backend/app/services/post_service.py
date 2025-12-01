@@ -1,8 +1,12 @@
 from sqlalchemy.util import symbol
 
-from app.models.models import Posts, Sentiment, Symbol, Comment
+from app.models.models import Posts, Sentiment, Symbol, Comment, User
 from app import db
 from datetime import datetime
+
+from app.models.serializers import CommentDetailSerializer
+
+
 class PostService:
     @staticmethod
     def create_post(data):
@@ -15,7 +19,10 @@ class PostService:
                 symbol_id=symbol_id.to_dict()['id'],
                 image_attachment= data.get('imageAttachment', None),
                 created_at = datetime.now())
-
+        user = User.query.filter_by(id = data['userId']).first_or_404()
+        user.post_count = user.post_count +1
+        # user.post_quality_avg = data['postQualityAvg']
+        # user.reputation_score = data['reputationScore']
         db.session.add(post)
         db.session.commit()
 
@@ -24,6 +31,11 @@ class PostService:
     @staticmethod
     def get_posts(user_id):
         posts = Posts.query.filter_by(user_id = user_id).all();
+        return posts
+
+    @staticmethod
+    def get_posts_by_symbol(symbol_code):
+        posts = Posts.query.join(Posts.symbol).filter(Symbol.code == symbol_code).all()
         return posts
 
     @staticmethod
@@ -49,7 +61,20 @@ class PostService:
        return comment
 
     @staticmethod
-    def get_comment(post_id):
-        comments = Comment.query.filter_by(post_id=post_id).all()
+    def get_comments_with_replies(post_id):
+        comments = Comment.query.filter_by(post_id=post_id, parent_id=None).all()
 
-        return comments
+        comment_schema = CommentDetailSerializer()
+        reply_schema = CommentDetailSerializer(many=True)
+
+        data = []
+
+        for c in comments:
+            replies = Comment.query.filter_by(parent_id=c.id).all()
+
+            data.append({
+                "comment": comment_schema.dump(c),
+                "replies": reply_schema.dump(replies)
+            })
+
+        return data

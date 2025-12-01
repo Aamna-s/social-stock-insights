@@ -1,0 +1,162 @@
+/* Simple Minimalist Sentiment Chart */
+.sentiment-analysis {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.sentiment-overview {
+    background: #f8fafc;
+    padding: 32px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    text-align: center;
+}
+
+.sentiment-overview h3 {
+    margin: 0 0 8px 0;
+    font-size: 24px;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.total-posts {
+    margin: 0;
+    font-size: 15px;
+    color: #64748b;
+}
+
+.sentiment-chart {
+    background: white;
+    padding: 32px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+}
+
+.chart-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.chart-bar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.bar-label {
+    min-width: 100px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #475569;
+}
+
+.bullish-fill {
+    background: #10b981;
+}
+
+.bearish-fill {
+    background: #ef4444;
+}
+
+.neutral-fill {
+    background: #94a3b8;
+}
+
+.bar-stats {
+    min-width: 80px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+}
+
+.bar-stats .count {
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.bar-stats .percentage {
+    color: #64748b;
+}
+
+.recent-posts {
+    background: white;
+    padding: 24px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+}
+
+.recent-posts h4 {
+    margin: 0 0 16px 0;
+    color: #1e293b;
+    font-size: 16px;
+    font-weight: 600;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.posts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.post-preview {
+    padding: 16px;
+    background: #f8fafc;
+    border-radius: 8px;
+    border-left: 3px solid #cbd5e1;
+    transition: border-color 0.2s ease;
+}
+
+.post-preview:hover {
+    border-left-color: #64748b;
+}
+
+.post-preview-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.post-preview-header .author {
+    font-weight: 600;
+    color: #1e293b;
+    font-size: 14px;
+}
+
+.sentiment-badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.sentiment-badge.bullish {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.sentiment-badge.bearish {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.sentiment-badge.neutral {
+    background: #f1f5f9;
+    color: #475569;
+}
+
+.post-preview-content {
+    margin: 0;
+    color: #64748b;
+    font-size: 13px;
+    line-height: 1.5;
+}

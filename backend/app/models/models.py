@@ -30,6 +30,9 @@ class User(db.Model):
     is_active = db.Column(db.Boolean, default=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    reputation_score = db.Column(db.Float, default=50.0)  # 0-100 score
+    post_quality_avg = db.Column(db.Float, default=0.0)   # Average quality of posts
+    post_count = db.Column(db.Integer, default=0)         # Number of posts
 
     def to_dict(self):
         return {

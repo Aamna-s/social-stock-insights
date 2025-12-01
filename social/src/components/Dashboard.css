@@ -1,4 +1,4 @@
-Dashboard.css - Stock Market Professional Design
+/* Dashboard.css - Stock Market Professional Design */
 
 /* Dashboard Layout */
 .dashboard-layout {
@@ -32,12 +32,14 @@ Dashboard.css - Stock Market Professional Design
   text-align: center;
   object-fit: cover;
 }
+
 .profile-avatar {
   width: 60px;
   height: 60px;
   border-radius: 50%;
   overflow: hidden;
-  border: 2px solid #fff; /* Optional, looks clean like WhatsApp */
+  border: 2px solid #fff;
+  /* Optional, looks clean like WhatsApp */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -204,7 +206,15 @@ Dashboard.css - Stock Market Professional Design
   color: white;
   font-size: 14px;
   font-weight: 600;
-  opacity: 0.5;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(30, 64, 175, 0.3);
+}
+
+.create-post-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(30, 64, 175, 0.5);
 }
 
 .empty-state p {
@@ -446,11 +456,9 @@ Dashboard.css - Stock Market Professional Design
 
 /* Post Card Styles */
 .post-card {
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.02),
-    rgba(255, 255, 255, 0.01)
-  );
+  background: linear-gradient(180deg,
+      rgba(255, 255, 255, 0.02),
+      rgba(255, 255, 255, 0.01));
   border-radius: 12px;
   padding: 14px;
   margin-bottom: 12px;
@@ -460,6 +468,7 @@ Dashboard.css - Stock Market Professional Design
   flex-direction: column;
   gap: 10px;
 }
+
 .post-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 18px rgba(2, 6, 23, 0.45);
@@ -467,11 +476,9 @@ Dashboard.css - Stock Market Professional Design
 
 .post-card.own-post {
   border-left: 4px solid #2563eb;
-  background: linear-gradient(
-    180deg,
-    rgba(37, 99, 235, 0.03),
-    rgba(255, 255, 255, 0.01)
-  );
+  background: linear-gradient(180deg,
+      rgba(37, 99, 235, 0.03),
+      rgba(255, 255, 255, 0.01));
 }
 
 /* author area */
@@ -481,70 +488,23 @@ Dashboard.css - Stock Market Professional Design
   align-items: center;
   flex-wrap: wrap;
 }
+
 .mine-badge {
   background: rgba(37, 99, 235, 0.12);
   color: #1e40af;
   font-weight: 600;
   padding: 2px 8px;
-  border-radius: 999px;
-  font-size: 12px;
-}
-
-/* badges */
-.post-badges {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-.post-symbol {
-  background: rgba(14, 165, 233, 0.08);
-  color: #0284c7;
-  padding: 4px 8px;
-  border-radius: 8px;
-  font-weight: 700;
-  font-size: 12px;
-}
-.post-sentiment {
-  font-weight: 700;
-  font-size: 12px;
-}
-.post-sentiment.bullish {
-  color: #16a34a;
-}
-.post-sentiment.bearish {
-  color: #ef4444;
-}
-
-/* content truncation and read more */
-.post-content {
-  position: relative;
-}
-.content-text.clamped {
-  max-height: 88px;
-  overflow: hidden;
-  line-height: 1.4;
-}
-.read-more {
-  margin-top: 6px;
-  background: transparent;
-  border: none;
-  color: #2563eb;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-/* actions */
-.post-actions {
-  display: flex;
-  justify-content: space-between;
   align-items: center;
   gap: 8px;
+  border-radius: 10px;
 }
+
 .left-actions {
   display: flex;
   align-items: center;
   gap: 8px;
 }
+
 .right-actions {
   display: flex;
   align-items: center;
@@ -563,10 +523,12 @@ Dashboard.css - Stock Market Professional Design
   cursor: pointer;
   transition: transform 0.06s ease, background 0.12s ease;
 }
+
 .like-button:hover {
   transform: translateY(-1px);
   background: rgba(255, 255, 255, 0.06);
 }
+
 .like-button.liked {
   background: linear-gradient(90deg, #ef4444, #f97316);
   color: white;
@@ -584,13 +546,16 @@ Dashboard.css - Stock Market Professional Design
   cursor: pointer;
   font-weight: 600;
 }
+
 .edit-btn:hover {
   background: rgba(255, 255, 255, 0.03);
 }
+
 .delete-btn {
   border-color: rgba(239, 68, 68, 0.18);
   color: #fecaca;
 }
+
 .delete-btn:hover {
   background: rgba(239, 68, 68, 0.06);
 }
@@ -606,6 +571,7 @@ Dashboard.css - Stock Market Professional Design
   padding: 6px 8px;
   border-radius: 8px;
 }
+
 .comments-section {
   margin-top: 8px;
   padding-top: 8px;
@@ -614,11 +580,13 @@ Dashboard.css - Stock Market Professional Design
   flex-direction: column;
   gap: 10px;
 }
+
 .comment-item {
   display: flex;
   gap: 10px;
   align-items: flex-start;
 }
+
 .comment-avatar {
   width: 32px;
   height: 32px;
@@ -626,9 +594,11 @@ Dashboard.css - Stock Market Professional Design
   object-fit: cover;
   flex: 0 0 32px;
 }
+
 .comment-body {
   flex: 1;
 }
+
 .comment-meta {
   display: flex;
   gap: 8px;
@@ -637,14 +607,17 @@ Dashboard.css - Stock Market Professional Design
   font-size: 12px;
   color: #6b7280;
 }
+
 .comment-author {
   font-weight: 700;
   color: #0f172a;
 }
+
 .comment-time {
   color: #94a3b8;
   font-size: 12px;
 }
+
 .comment-delete {
   margin-left: auto;
   background: transparent;
@@ -653,6 +626,7 @@ Dashboard.css - Stock Market Professional Design
   cursor: pointer;
   font-size: 12px;
 }
+
 .comment-content {
   font-size: 14px;
   color: #0f172a;
@@ -664,6 +638,7 @@ Dashboard.css - Stock Market Professional Design
   flex-direction: column;
   gap: 8px;
 }
+
 .comment-form textarea {
   width: 100%;
   min-height: 56px;
@@ -673,6 +648,7 @@ Dashboard.css - Stock Market Professional Design
   resize: vertical;
   font-family: inherit;
 }
+
 .comment-form-actions {
   display: flex;
   justify-content: flex-end;
@@ -704,6 +680,7 @@ Dashboard.css - Stock Market Professional Design
   gap: 8px;
   align-items: flex-start;
 }
+
 .reply-avatar {
   width: 28px;
   height: 28px;
@@ -711,9 +688,11 @@ Dashboard.css - Stock Market Professional Design
   object-fit: cover;
   flex: 0 0 28px;
 }
+
 .reply-body {
   flex: 1;
 }
+
 .reply-meta {
   display: flex;
   gap: 6px;
@@ -721,14 +700,17 @@ Dashboard.css - Stock Market Professional Design
   margin-bottom: 4px;
   font-size: 12px;
 }
+
 .reply-author {
   font-weight: 700;
   color: #0f172a;
 }
+
 .reply-time {
   color: #94a3b8;
   font-size: 11px;
 }
+
 .reply-delete {
   background: transparent;
   border: none;
@@ -736,6 +718,7 @@ Dashboard.css - Stock Market Professional Design
   cursor: pointer;
   font-size: 11px;
 }
+
 .reply-content {
   font-size: 13px;
   color: #0f172a;
@@ -748,6 +731,7 @@ Dashboard.css - Stock Market Professional Design
   gap: 6px;
   margin-top: 8px;
 }
+
 .reply-form textarea {
   width: 100%;
   min-height: 44px;
@@ -828,12 +812,840 @@ Dashboard.css - Stock Market Professional Design
     width: 100%;
   }
 
-  .modal-content {
-    width: 95%;
-    padding: 20px;
+
+  .comment-delete {
+    margin-left: auto;
+    background: transparent;
+    border: none;
+    color: #ef4444;
+    cursor: pointer;
+    font-size: 12px;
   }
 
-  .modal-actions {
-    flex-direction: column;
+  .comment-content {
+    font-size: 14px;
+    color: #0f172a;
   }
+
+  /* comment form */
+  .comment-form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .comment-form textarea {
+    width: 100%;
+    min-height: 56px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid #e6eef7;
+    resize: vertical;
+    font-family: inherit;
+  }
+
+  .comment-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+
+  /* Replies (nested comments) */
+  .reply-toggle {
+    margin-top: 6px;
+    background: transparent;
+    border: none;
+    color: #0284c7;
+    cursor: pointer;
+    font-size: 12px;
+    padding: 4px 0;
+  }
+
+  .replies-section {
+    margin-top: 10px;
+    padding-left: 16px;
+    border-left: 2px solid #e0e7ff;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .reply-item {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+  }
+
+  .reply-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex: 0 0 28px;
+  }
+
+  .reply-body {
+    flex: 1;
+  }
+
+  .reply-meta {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    margin-bottom: 4px;
+    font-size: 12px;
+  }
+
+  .reply-author {
+    font-weight: 700;
+    color: #0f172a;
+  }
+
+  .reply-time {
+    color: #94a3b8;
+    font-size: 11px;
+  }
+
+  .reply-delete {
+    background: transparent;
+    border: none;
+    color: #ef4444;
+    cursor: pointer;
+    font-size: 11px;
+  }
+
+  .reply-content {
+    font-size: 13px;
+    color: #0f172a;
+    line-height: 1.4;
+  }
+
+  .reply-form {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 8px;
+  }
+
+  .reply-form textarea {
+    width: 100%;
+    min-height: 44px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid #e6eef7;
+    resize: vertical;
+    font-family: inherit;
+    font-size: 13px;
+  }
+
+  .replies-loading {
+    font-size: 12px;
+    color: #64748b;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .sidebar {
+      width: 70px;
+    }
+
+    .sidebar-content {
+      padding: 20px 10px;
+    }
+
+    .profile-section {
+      padding-bottom: 20px;
+      margin-bottom: 20px;
+    }
+
+    .profile-avatar {
+      width: 50px;
+      height: 50px;
+    }
+
+    .avatar-placeholder {
+      font-size: 20px;
+    }
+
+    .profile-name,
+    .profile-email {
+      display: none;
+    }
+
+    .nav-item,
+    .signout-btn {
+      padding: 12px;
+      justify-content: center;
+    }
+
+    .nav-item span:not(.nav-icon),
+    .signout-btn span:not(.nav-icon) {
+      display: none;
+    }
+
+    .main-content {
+      margin-left: 70px;
+      padding: 20px 15px;
+    }
+
+    .dashboard-header,
+    .posts-feed {
+      padding: 20px;
+    }
+
+    .dashboard-header h2 {
+      font-size: 24px;
+    }
+
+    .feed-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 15px;
+    }
+
+    .create-post-btn {
+      width: 100%;
+    }
+
+    .modal-content {
+      width: 95%;
+      padding: 20px;
+    }
+
+    .modal-actions {
+      flex-direction: column;
+    }
+  }
+
+  /* Stock Details Styles */
+  .stock-details {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .stock-overview {
+    background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+    color: white;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
+  }
+
+  .stock-overview h3 {
+    margin: 0 0 16px 0;
+    font-size: 28px;
+    font-weight: 700;
+  }
+
+  .stock-price {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+  }
+
+  .stock-price .price {
+    font-size: 48px;
+    font-weight: 700;
+  }
+
+  .stock-price .change {
+    font-size: 20px;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 8px;
+  }
+
+  .stock-price .change.positive {
+    background: rgba(16, 185, 129, 0.2);
+    color: #10b981;
+  }
+
+  .stock-price .change.negative {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+  }
+
+  .stock-info {
+    background: white;
+    padding: 24px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+  }
+
+  .stock-info h4 {
+    margin: 0 0 16px 0;
+    color: #1e293b;
+    font-size: 20px;
+    font-weight: 600;
+  }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+  }
+
+  .info-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px;
+    background: #f8fafc;
+    border-radius: 8px;
+  }
+
+  .info-item span {
+    font-weight: 600;
+    color: #64748b;
+  }
+
+  .stock-description {
+    background: white;
+    padding: 24px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+  }
+
+  .stock-description h4 {
+    margin: 0 0 12px 0;
+    color: #1e293b;
+    font-size: 20px;
+    font-weight: 600;
+  }
+
+  .stock-description p {
+    margin: 0;
+    color: #475569;
+    line-height: 1.6;
+  }
+
+  /* Sentiment Analysis Styles */
+  .sentiment-analysis {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .sentiment-overview {
+    background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+    color: white;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
+  }
+
+  .sentiment-overview h3 {
+    margin: 0 0 8px 0;
+    font-size: 28px;
+    font-weight: 700;
+  }
+
+  .total-posts {
+    margin: 0;
+    font-size: 16px;
+    opacity: 0.9;
+  }
+
+  .sentiment-chart {
+    background: white;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+
+  .chart-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .chart-bar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .bar-label {
+    min-width: 120px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 15px;
+  }
+
+  .sentiment-icon {
+    font-size: 20px;
+  }
+
+  .bar-container {
+    flex: 1 1 240px;       /* preferred size */
+    max-width: 240px;      /* limit overall bar width */
+    min-width: 120px;
+    height: 10px;          /* reduce height for compact view */
+    border-radius: 8px;
+    background: #eef2ff;
+    padding: 2px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .bar-fill {
+    height: 100%;
+    border-radius: 6px;
+    transition: width .25s ease;
+    /* color comes from existing logic; keep default if present */
+  }
+
+  .bullish-fill {
+    background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+    animation: fillBar 0.8s ease-out;
+  }
+
+  .bearish-fill {
+    background: linear-gradient(90deg, #ef4444 0%, #dc2626 100%);
+    animation: fillBar 0.8s ease-out;
+  }
+
+  .neutral-fill {
+    background: linear-gradient(90deg, #64748b 0%, #475569 100%);
+    animation: fillBar 0.8s ease-out;
+  }
+
+  @keyframes fillBar {
+    from {
+      width: 0 !important;
+    }
+  }
+
+  .bar-stats {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+  }
+
+  .bar-stats .count {
+    font-size: 24px;
+    font-weight: 800;
+    color: #1e293b;
+    line-height: 1;
+  }
+
+  .bar-stats .percentage {
+    font-size: 14px;
+    font-weight: 600;
+    color: #64748b;
+    background: #f1f5f9;
+    padding: 4px 10px;
+    border-radius: 6px;
+  }
+
+  .recent-posts {
+    background: white;
+    padding: 32px;
+    border-radius: 20px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e2e8f0;
+  }
+
+  .recent-posts h4 {
+    margin: 0 0 20px 0;
+    color: #1e293b;
+    font-size: 22px;
+    font-weight: 700;
+    padding-bottom: 16px;
+    border-bottom: 2px solid #e2e8f0;
+  }
+
+  .posts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .post-preview {
+    padding: 20px;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-radius: 14px;
+    border-left: 4px solid #3b82f6;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .post-preview:hover {
+    transform: translateX(4px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+    border-left-color: #2563eb;
+  }
+
+  .post-preview-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .post-preview-header .author {
+    font-weight: 700;
+    color: #1e293b;
+    font-size: 15px;
+  }
+
+  .sentiment-badge {
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .sentiment-badge.bullish {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.15) 100%);
+    color: #059669;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+  }
+
+  .sentiment-badge.bearish {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(220, 38, 38, 0.15) 100%);
+    color: #dc2626;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+  }
+
+  .sentiment-badge.neutral {
+    background: rgba(100, 116, 139, 0.1);
+    color: #475569;
+  }
+
+  .post-preview-content {
+    margin: 0;
+    color: #475569;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* Loading spinner for sentiment */
+  .loading-spinner {
+    text-align: center;
+    padding: 60px 20px;
+  }
+
+  .spinner {
+    width: 50px;
+    height: 50px;
+    margin: 0 auto 20px;
+    border: 4px solid #e2e8f0;
+    border-top-color: #3b82f6;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+}
+
+/* Sentiment Analysis Chart Styles */
+.sentiment-analysis {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  animation: fadeIn 0.5s ease;
+}
+
+.sentiment-overview {
+  background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+  color: white;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(30, 64, 175, 0.4);
+  text-align: center;
+}
+
+.sentiment-overview h3 {
+  margin: 0 0 12px 0;
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.total-posts {
+  margin: 0;
+  font-size: 18px;
+  opacity: 0.95;
+  font-weight: 500;
+}
+
+.sentiment-chart {
+  background: white;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e2e8f0;
+}
+
+.chart-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.chart-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* label area */
+.bar-label {
+  flex: 0 0 80px;        /* reduce label width */
+  max-width: 80px;
+  font-size: 13px;
+  color: #374151;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* the bar track — constrain max width so bars don't grow too large */
+.bar-container {
+  flex: 1 1 240px;       /* preferred size */
+  max-width: 240px;      /* limit overall bar width */
+  min-width: 120px;
+  height: 10px;          /* reduce height for compact view */
+  border-radius: 8px;
+  background: #eef2ff;
+  padding: 2px;
+  overflow: hidden;
+  position: relative;
+}
+
+/* the fill inside the track — keep transition but small height */
+.bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  transition: width .25s ease;
+  /* color comes from existing logic; keep default if present */
+}
+
+/* responsive: tighten on small screens */
+@media (max-width: 768px) {
+  .bar-label { flex: 0 0 64px; max-width: 64px; font-size: 12px; }
+  .bar-container { max-width: 180px; min-width: 80px; height: 9px; }
+}
+
+/* Compact sentiment bars for symbol details (scoped) */
+.symbol-details .sentiment-chart {
+  padding: 12px;              /* tighter padding for symbol view */
+  border-radius: 10px;
+}
+
+.symbol-details .chart-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.symbol-details .chart-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.symbol-details .bar-label {
+  flex: 0 0 64px;             /* smaller label area */
+  max-width: 64px;
+  font-size: 12px;
+  color: #374151;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.symbol-details .bar-container {
+  flex: 1 1 180px;
+  max-width: 180px;           /* limit bar max width on symbol details */
+  min-width: 100px;
+  height: 8px;                /* reduced height */
+  border-radius: 6px;
+  background: #eef2ff;
+  padding: 2px;
+  overflow: hidden;
+  position: relative;
+}
+
+.symbol-details .bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  transition: width .2s ease;
+}
+
+.symbol-details .bar-stats .count {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.symbol-details .bar-stats .percentage {
+  font-size: 12px;
+  padding: 3px 8px;
+}
+
+/* responsive tweak for small screens */
+@media (max-width: 768px) {
+  .symbol-details .bar-label { flex: 0 0 56px; max-width: 56px; font-size: 11px; }
+  .symbol-details .bar-container { max-width: 140px; min-width: 80px; height: 7px; }
+}
+
+/* Symbol Insights Styles */
+.symbol-insights {
+  background: white;
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 14px;
+  border: 1px solid #e6eef7;
+  box-shadow: 0 4px 12px rgba(2, 6, 23, 0.04);
+}
+
+.symbol-insights h4 {
+  margin: 0 0 12px 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.insights-loading { font-size: 13px; color: #64748b; }
+.insights-error { color: #ef4444; font-size: 13px; }
+
+.asset-name {
+  font-size: 12px;
+  color: #64748b;
+  margin: 0 0 10px 0;
+}
+
+.events-list { display: flex; flex-direction: column; gap: 8px; }
+
+.event-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  background: #f8fafc;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+.event-date { color: #94a3b8; font-weight: 600; }
+.event-change { color: #0f172a; }
+.event-change strong { color: #2563eb; }
+
+.no-events { font-size: 13px; color: #94a3b8; margin: 0; }
+
+/* Real-time Tickers Insights */
+.tickers-insights {
+  background: white;
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 14px;
+  border: 1px solid #e6eef7;
+  box-shadow: 0 4px 12px rgba(2,6,23,0.04);
+}
+
+.insights-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.insights-header h4 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.insights-loading {
+  font-size: 12px;
+  color: #64748b;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.tickers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+}
+
+.ticker-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 10px;
+  transition: transform 0.15s, box-shadow 0.15s;
+  cursor: pointer;
+}
+
+.ticker-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(2,6,23,0.08);
+  border-color: #2563eb;
+}
+
+.ticker-symbol {
+  font-size: 14px;
+  font-weight: 700;
+  color: #2563eb;
+  margin-bottom: 4px;
+}
+
+.ticker-name {
+  font-size: 12px;
+  color: #0f172a;
+  margin-bottom: 6px;
+  line-height: 1.3;
+  max-height: 32px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ticker-meta {
+  display: flex;
+  gap: 6px;
+  font-size: 11px;
+}
+
+.ticker-market {
+  background: rgba(37,99,235,0.08);
+  color: #1e40af;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.ticker-currency {
+  background: rgba(16,185,129,0.08);
+  color: #065f46;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.insights-error {
+  color: #ef4444;
+  font-size: 13px;
+}
+
+.insights-empty {
+  color: #94a3b8;
+  font-size: 13px;
 }

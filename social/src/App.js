@@ -6,6 +6,7 @@ import SignUp from './components/SignUp';
 import Dashboard from './components/Dashboard';
 import CreatePost from './components/CreatePost';
 import MyPosts from './components/MyPosts';
+import SymbolDetails from './components/SymbolDetails';
 import './App.css';
 
 function App() {
@@ -55,6 +56,14 @@ function App() {
               element={
                 <SignedIn>
                   <MyPosts />
+                </SignedIn>
+              }
+            />
+            <Route
+              path="/symbol/:symbolId"
+              element={
+                <SignedIn>
+                  <SymbolDetails />
                 </SignedIn>
               }
             />
