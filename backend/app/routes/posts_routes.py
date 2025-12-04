@@ -76,7 +76,6 @@ def init_routes(app):
     def post_like(post_id):
         """Like a post"""
         try:
-            print("post_id router ", post_id)
             post = PostService.post_like(post_id)
             
             # Use serializer to format response
