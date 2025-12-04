@@ -7,9 +7,7 @@ const Dashboard = () => {
   const { signOut } = useClerk();
   const navigate = useNavigate();
   // memoize user so its reference doesn't change every render
-  const user = useMemo(() => {
-    try { return JSON.parse(localStorage.getItem('user')); } catch { return null; }
-  }, []);
+  const user = JSON.parse(localStorage.getItem('user'));
   const [posts, setPosts] = useState([]);
   const [loadingPosts, setLoadingPosts] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -31,10 +29,9 @@ const Dashboard = () => {
   const MASSIVE_KEY = process.env.REACT_APP_MASSIVE_API_KEY;
 
   const tickersFetchedRef = useRef(false);
-  const currentUserId = user?.id || (() => { try { return JSON.parse(localStorage.getItem('user'))?.id; } catch { return null; } })();
-  const userFromStorage = JSON.parse(localStorage.getItem('user'));
-  const reputationScore = userFromStorage?.reputation_score || 0;
-  const postQuality = userFromStorage?.post_quality_avg || 0;
+  const currentUserId =  user?.id;
+  const reputationScore = user?.reputation_score || 0;
+  const postQuality = user?.post_quality_avg || 0;
   const fetchTickers = async (symbols = ['AAPL', 'GOOGL', 'MSFT', 'AMZN', 'TSLA', 'NVDA', 'META']) => {
     if (tickersFetchedRef.current) return; // already fetched
     tickersFetchedRef.current = true;
@@ -120,8 +117,6 @@ const Dashboard = () => {
   };
 
   const handleAddComment = async (postId) => {
-    console.log('Adding comment to post---', postId);
-    console.log('User:', user, '   ', currentUserId);
     const text = (commentInput[postId] || '').trim();
     if (!text) return;
     const newComment = {
@@ -216,7 +211,6 @@ const Dashboard = () => {
 
   const handleLike = async (postId, isLiked) => {
     try {
-      const userId = JSON.parse(localStorage.getItem('user')).id;
 
       setPosts(posts.map(post => {
         if (post.id === postId) {
@@ -234,7 +228,7 @@ const Dashboard = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ userId }),
+        body: JSON.stringify({ currentUserId }),
       });
 
       if (!response.ok) {
@@ -370,7 +364,7 @@ const Dashboard = () => {
                   borderRadius: '8px'
                 }}
               >
-                <span className="nav-icon">🏠</span>
+                <span className="nav-icon"></span>
                 Community Feed
               </button>
               <button
@@ -389,7 +383,7 @@ const Dashboard = () => {
                   fontSize: '1rem'
                 }}
               >
-                <span className="nav-icon">👤</span>
+                <span className="nav-icon"></span>
                 My Posts
               </button>
 
@@ -457,7 +451,7 @@ const Dashboard = () => {
             </div>
 
             <button className="signout-btn" onClick={handleSignOut}>
-              <span className="nav-icon">🚪</span>
+              <span className="nav-icon"></span>
               Sign Out
             </button>
           </div>

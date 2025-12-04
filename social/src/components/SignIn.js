@@ -1,15 +1,17 @@
 
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Auth.css';
 import { useSignIn } from '@clerk/clerk-react';
+
 const SignIn = () => {
     const { isLoaded, signIn, setActive } = useSignIn();
+    const navigate = useNavigate();
     const [username, setUsername] = React.useState('');
     const [password, setPassword] = React.useState('');
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-
 
         try {
             const result = await signIn.create({
@@ -32,7 +34,8 @@ const SignIn = () => {
                     console.error('Error fetching user data:', error);
                 }
 
-                window.location.href = '/dashboard';
+                // Use navigate instead of window.location.href to prevent full page reload
+                navigate('/dashboard');
             } else {
                 console.log('Additional steps needed:', result);
             }
@@ -40,7 +43,6 @@ const SignIn = () => {
             console.error('Error signing in:', err);
             alert('Sign in failed. Please check your credentials.');
         }
-
     };
 
     return (

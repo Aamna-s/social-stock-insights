@@ -6,18 +6,18 @@ import './Dashboard.css';
 
 const MyPosts = () => {
     const { signOut } = useClerk();
-    const { user } = useUser();
+    const user = JSON.parse(localStorage.getItem('user'));
     const navigate = useNavigate();
-
+    const currentUserId = user?.id;
+    const reputationScore = user?.reputation_score || 0;
+    const postQuality = user?.post_quality_avg || 0;
     const [posts, setPosts] = useState([]);
     const [loadingPosts, setLoadingPosts] = useState(true);
     const [showModal, setShowModal] = useState(false);
 
     useEffect(() => {
-        if (user) {
-            fetchPosts();
-        }
-    }, [user]);
+        fetchPosts();
+    }, []);
 
     const fetchPosts = async () => {
         try {
@@ -51,7 +51,6 @@ const MyPosts = () => {
 
     const handleLike = async (postId, isLiked) => {
         try {
-            const userId = JSON.parse(localStorage.getItem('user')).id;
 
             // Optimistically update UI
             setPosts(posts.map(post => {
@@ -71,7 +70,7 @@ const MyPosts = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ userId }),
+                body: JSON.stringify({ currentUserId }),
             });
 
             if (!response.ok) {
@@ -93,10 +92,6 @@ const MyPosts = () => {
     const [openReplies, setOpenReplies] = useState({});
     const [repliesMap, setRepliesMap] = useState({});
     const [loadingReplies, setLoadingReplies] = useState({});
-
-    const currentUserId = user?.id || (() => {
-        try { return JSON.parse(localStorage.getItem('user'))?.id; } catch { return null; }
-    })();
 
     const toggleExpand = (postId) => {
         setExpandedPosts(prev => prev.includes(postId) ? prev.filter(id => id !== postId) : [...prev, postId]);
@@ -297,7 +292,6 @@ const MyPosts = () => {
                                 )}
                             </div>
                             <h3 className="profile-name">{user?.firstName || user?.username}</h3>
-                            <p className="profile-email">{user?.primaryEmailAddress?.emailAddress}</p>
                         </div>
 
                         <div className="sidebar-nav" style={{ margin: '20px 0', display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -317,7 +311,7 @@ const MyPosts = () => {
                                     fontSize: '1rem'
                                 }}
                             >
-                                <span className="nav-icon">🏠</span>
+                                <span className="nav-icon"></span>
                                 Community Feed
                             </button>
                             <button
@@ -336,13 +330,75 @@ const MyPosts = () => {
                                     borderRadius: '8px'
                                 }}
                             >
-                                <span className="nav-icon">👤</span>
+                                <span className="nav-icon"></span>
                                 My Posts
                             </button>
+
+                            {/* Reputation Stats Card */}
+                            <div style={{
+                                marginTop: '20px',
+                                padding: '15px',
+                                background: 'rgba(255, 255, 255, 0.08)',
+                                borderRadius: '12px',
+                                border: '1px solid rgba(255, 255, 255, 0.1)'
+                            }}>
+                                <div style={{
+                                    fontSize: '12px',
+                                    color: 'rgba(255, 255, 255, 0.6)',
+                                    marginBottom: '10px',
+                                    fontWeight: '500'
+                                }}>
+                                    YOUR STATS
+                                </div>
+                                <div style={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: '8px'
+                                }}>
+                                    <div style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'space-between'
+                                    }}>
+                                        <span style={{ fontSize: '13px', color: 'rgba(255, 255, 255, 0.8)' }}>
+                                            ⭐ Reputation
+                                        </span>
+                                        <span style={{
+                                            fontSize: '16px',
+                                            fontWeight: '700',
+                                            color: '#fff',
+                                            background: 'rgba(59, 130, 246, 0.2)',
+                                            padding: '2px 8px',
+                                            borderRadius: '6px'
+                                        }}>
+                                            {reputationScore}
+                                        </span>
+                                    </div>
+                                    <div style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'space-between'
+                                    }}>
+                                        <span style={{ fontSize: '13px', color: 'rgba(255, 255, 255, 0.8)' }}>
+                                            📊 Quality
+                                        </span>
+                                        <span style={{
+                                            fontSize: '16px',
+                                            fontWeight: '700',
+                                            color: '#fff',
+                                            background: 'rgba(16, 185, 129, 0.2)',
+                                            padding: '2px 8px',
+                                            borderRadius: '6px'
+                                        }}>
+                                            {postQuality.toFixed(1)}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <button className="signout-btn" onClick={handleSignOut}>
-                            <span className="nav-icon">🚪</span>
+                            <span className="nav-icon"></span>
                             Sign Out
                         </button>
                     </div>

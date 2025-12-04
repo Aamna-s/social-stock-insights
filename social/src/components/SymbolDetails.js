@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { SignedIn, SignedOut } from '@clerk/clerk-react';
+import { SignedIn, SignedOut, useUser, useClerk } from '@clerk/clerk-react';
 import './Dashboard.css';
 import './SentimentChart.css';
 
@@ -10,6 +10,14 @@ const SymbolDetails = ({ symbol }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // Memoize user data to prevent re-parsing on every render
+  const user =  JSON.parse(localStorage.getItem('user'));
+ 
+
+  const reputationScore = user?.reputation_score || 0;
+  const postQuality = user?.post_quality_avg || 0;
+  const { signOut } = useClerk();
   const [sentimentStats, setSentimentStats] = useState({
     bullish: 0,
     bearish: 0,
@@ -19,10 +27,14 @@ const SymbolDetails = ({ symbol }) => {
   const [insights, setInsights] = useState(null);
   const [insightsLoading, setInsightsLoading] = useState(false);
   const [insightsError, setInsightsError] = useState(null);
+
   const pollRef = useRef(null);
 
   const MASSIVE_KEY = process.env.REACT_APP_MASSIVE_API_KEY;
-
+  const handleSignOut = async () => {
+    await signOut();
+    navigate('/signin');
+  };
   useEffect(() => {
     if (!symbol || !MASSIVE_KEY) {
       setInsightsError('Missing symbol or API key');
@@ -39,7 +51,7 @@ const SymbolDetails = ({ symbol }) => {
         const res = await fetch(url);
         if (!res.ok) throw new Error(`status ${res.status}`);
         const json = await res.json();
-        
+
         if (!mounted) return;
         setInsights(json.results); // results contains events, name, etc.
         setInsightsError(null);
@@ -49,7 +61,6 @@ const SymbolDetails = ({ symbol }) => {
         if (mounted) setInsightsLoading(false);
       }
     };
-
     // initial fetch + poll every 30s (adjust as needed)
     fetchTickerEvents();
     pollRef.current = setInterval(fetchTickerEvents, 30000);
@@ -106,14 +117,138 @@ const SymbolDetails = ({ symbol }) => {
       </SignedOut>
 
       <SignedIn>
-        <aside className="sidebar">
+        {/* <aside className="sidebar">
           <div className="sidebar-content">
             <button className="nav-btn" onClick={() => navigate('/dashboard')}>
-              <span className="nav-icon">🏠</span> Back to Feed
+              <span className="nav-icon"></span> Back to Feed
             </button>
             <button className="nav-btn" onClick={() => navigate('/my-posts')}>
-              <span className="nav-icon">👤</span> My Posts
+              <span className="nav-icon"></span> My Posts
             </button>
+          </div>
+        </aside> */}
+        <aside className="sidebar">
+          <div className="sidebar-content">
+            <div className="profile-section">
+              <div className="profile-avatar">
+                {user?.imageUrl ? (
+                  <img src={user.imageUrl} alt="Profile" />
+                ) : (
+                  <div className="avatar-placeholder">
+                    {(user?.firstName?.[0] || user?.username?.[0] || 'U').toUpperCase()}
+                  </div>
+                )}
+              </div>
+              <h3 className="profile-name">{user?.firstName || user?.username}</h3>
+              <p className="profile-email">{user?.primaryEmailAddress?.emailAddress}</p>
+            </div>
+
+            <div className="sidebar-nav" style={{ margin: '20px 0', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <button
+                className="nav-btn"
+                onClick={() => navigate('/dashboard')}
+                style={{
+                  padding: '10px',
+                  textAlign: 'left',
+                  background: 'none',
+                  border: 'none',
+                  color: 'white',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  fontSize: '1rem'
+                }}
+              >
+                <span className="nav-icon"></span>
+                Community Feed
+              </button>
+              <button
+                className="nav-btn active"
+                style={{
+                  padding: '10px',
+                  textAlign: 'left',
+                  background: 'rgba(255, 255, 255, 0.1)',
+                  border: 'none',
+                  color: 'white',
+                  cursor: 'default',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  fontSize: '1rem',
+                  borderRadius: '8px'
+                }}
+              >
+                <span className="nav-icon"></span>
+                My Posts
+              </button>
+              {/* Reputation Stats Card */}
+              <div style={{
+                marginTop: '20px',
+                padding: '15px',
+                background: 'rgba(255, 255, 255, 0.08)',
+                borderRadius: '12px',
+                border: '1px solid rgba(255, 255, 255, 0.1)'
+              }}>
+                <div style={{
+                  fontSize: '12px',
+                  color: 'rgba(255, 255, 255, 0.6)',
+                  marginBottom: '10px',
+                  fontWeight: '500'
+                }}>
+                  YOUR STATS
+                </div>
+                <div style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '8px'
+                }}>
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between'
+                  }}>
+                    <span style={{ fontSize: '13px', color: 'rgba(255, 255, 255, 0.8)' }}>
+                      ⭐ Reputation
+                    </span>
+                    <span style={{
+                      fontSize: '16px',
+                      fontWeight: '700',
+                      color: '#fff',
+                      background: 'rgba(59, 130, 246, 0.2)',
+                      padding: '2px 8px',
+                      borderRadius: '6px'
+                    }}>
+                      {reputationScore}
+                    </span>
+                  </div>
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between'
+                  }}>
+                    <span style={{ fontSize: '13px', color: 'rgba(255, 255, 255, 0.8)' }}>
+                      📊 Quality
+                    </span>
+                    <span style={{
+                      fontSize: '16px',
+                      fontWeight: '700',
+                      color: '#fff',
+                      background: 'rgba(16, 185, 129, 0.2)',
+                      padding: '2px 8px',
+                      borderRadius: '6px'
+                    }}>
+                      {postQuality.toFixed(1)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button className="signout-btn" onClick={handleSignOut}>
+              <span className="nav-icon"></span>
+              Sign Out
+            </button>
+
           </div>
         </aside>
 

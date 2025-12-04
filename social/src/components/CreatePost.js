@@ -32,7 +32,7 @@ class Cerebras {
 
 // accept posts from parent
 const CreatePost = ({ onSuccess, onCancel, posts }) => {
-    const { user } = useUser();
+    const  user  = JSON.parse(localStorage.getItem('user'));
     const [content, setContent] = useState('');
     const [symbol, setSymbol] = useState('');
     const [loading, setLoading] = useState(false);
@@ -57,7 +57,7 @@ const CreatePost = ({ onSuccess, onCancel, posts }) => {
 
     const scorePrediction = async () => {
 
-        const userId = JSON.parse(localStorage.getItem('user'))?.id;
+        const userId = user?.id;
         console.log("userId", userId)
         if (!userId) return;
         console.log("userId")
@@ -213,22 +213,13 @@ const CreatePost = ({ onSuccess, onCancel, posts }) => {
                     currentAnalysis = await analyzeSentiment(content);
                 }
 
-                console.log('data ', JSON.stringify({
-                    userId: JSON.parse(localStorage.getItem('user')).id,
-                    content: content.trim(),
-                    symbol: symbol.trim() || (currentAnalysis?.symbol || ''),
-                    sentiment: currentAnalysis ? currentAnalysis.sentiment : 'Neutral',
-                    sentimentScore: currentAnalysis ? currentAnalysis.score : 0,
-                    imageAttachment: attachment,
-                }));
-
                 const response = await fetch('http://localhost:5000/api/posts', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        userId: JSON.parse(localStorage.getItem('user')).id,
+                        userId: user.id,
                         content: content.trim(),
                         symbol: symbol.trim() || (currentAnalysis?.symbol || ''),
                         sentiment: currentAnalysis ? currentAnalysis.sentiment : 'Neutral',
@@ -243,7 +234,6 @@ const CreatePost = ({ onSuccess, onCancel, posts }) => {
                 }
 
                 const result = await response.json();
-                console.log('Post created:', result);
 
                 setMessage('Post created successfully!');
                 scorePrediction()
