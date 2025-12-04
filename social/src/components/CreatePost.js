@@ -58,9 +58,7 @@ const CreatePost = ({ onSuccess, onCancel, posts }) => {
     const scorePrediction = async () => {
 
         const userId = user?.id;
-        console.log("userId", userId)
         if (!userId) return;
-        console.log("userId")
         const userPosts = posts.filter(p => (p.user_id === userId) || (p.user && p.user.id === userId));
         if (userPosts.length === 0) return;
 

@@ -28,7 +28,6 @@ const SignIn = () => {
                     if (userResponse.ok) {
                         const userData = await userResponse.json();
                         localStorage.setItem('user', JSON.stringify(userData.user));
-                        console.log('User data stored:', userData);
                     }
                 } catch (error) {
                     console.error('Error fetching user data:', error);
