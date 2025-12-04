@@ -44,51 +44,55 @@ const SignIn = () => {
     };
 
     return (
-        <div className="auth-container">
-            <div className="auth-header">
-                <h2>Welcome Back</h2>
-                <p>Please enter your details to sign in</p>
-            </div>
-
-            <form className="auth-form" onSubmit={handleSubmit}>
-                <div className="form-group">
-                    <label htmlFor="username">Username</label>
-                    <input
-                        type="text"
-                        id="username"
-                        className="form-input"
-                        placeholder="Enter your username"
-                        onChange={(e) => setUsername(e.target.value)}
-                        required
-                    />
+        <div className="auth-page-wrapper">
+            <div className="auth-container">
+                <div className="auth-header">
+                    <h2>Welcome Back</h2>
+                    <p>Please enter your details to sign in</p>
                 </div>
 
-                <div className="form-group">
-                    <label htmlFor="password">Password</label>
-                    <input
-                        type="password"
-                        id="password"
-                        className="form-input"
-                        placeholder="Enter your password"
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
+                <form className="auth-form" onSubmit={handleSubmit}>
+                    <div className="form-group">
+                        <label htmlFor="username">Username</label>
+                        <input
+                            type="text"
+                            id="username"
+                            className="form-input"
+                            placeholder="Enter your username"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            required
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="password">Password</label>
+                        <input
+                            type="password"
+                            id="password"
+                            className="form-input"
+                            placeholder="Enter your password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
+                    </div>
+
+                    <div className="form-options">
+                        <label className="remember-me">
+                            <input type="checkbox" />
+                            Remember me
+                        </label>
+                        <a href="#" className="forgot-password">Forgot Password?</a>
+                    </div>
+
+                    <button type="submit" className="submit-btn">Sign In</button>
+                </form>
+
+                <div className="auth-footer">
+                    Don't have an account?
+                    <Link to="/signup" className="auth-link">Sign up</Link>
                 </div>
-
-                <div className="form-options">
-                    <label className="remember-me">
-                        <input type="checkbox" />
-                        Remember me
-                    </label>
-                    <a href="#" className="forgot-password">Forgot Password?</a>
-                </div>
-
-                <button type="submit" className="submit-btn" onSubmit={handleSubmit}>Sign In</button>
-            </form>
-
-            <div className="auth-footer">
-                Don't have an account?
-                <Link to="/signup" className="auth-link">Sign up</Link>
             </div>
         </div>
     );

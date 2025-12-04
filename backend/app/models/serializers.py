@@ -37,9 +37,9 @@ class UserPublicSerializer(Schema):
     first_name = fields.Str()
     last_name = fields.Str()
     profile_picture = fields.Str()
-    reputation_score = fields.Int()
+    reputation_score = fields.Float()
     post_count = fields.Int()
-    post_quality_avg = fields.Int()
+    post_quality_avg = fields.Float()
     class Meta:
         unknown = EXCLUDE
 

@@ -11,6 +11,7 @@ const SignUp = () => {
     const [firstName, setFirstName] = React.useState('');
     const [lastName, setLastName] = React.useState('');
     const [pic, setPic] = React.useState(null);
+    const [error, setError] = React.useState('');
 
     const convertBase64 = (file) => {
         return new Promise((resolve, reject) => {
@@ -64,6 +65,19 @@ const SignUp = () => {
     };
     const handleSignUp = async (e) => {
         e.preventDefault();
+        setError('');
+
+        // Validate passwords match
+        if (password !== confirmPassword) {
+            setError('Passwords do not match');
+            return;
+        }
+
+        // Validate password strength
+        if (password.length < 8) {
+            setError('Password must be at least 8 characters long');
+            return;
+        }
 
         if (!isLoaded) return;
 
@@ -99,95 +113,105 @@ const SignUp = () => {
 
         } catch (err) {
             console.error('Error signing up:', err);
-            alert('Sign up failed. Please try again.');
+            setError(err.errors?.[0]?.message || 'Sign up failed. Please try again.');
         }
     };
 
     return (
-        <div className="auth-container">
-            <div className="auth-header">
-                <h2>Create Account</h2>
-                <p>Join us and start your journey today</p>
-            </div>
-
-            <form className="auth-form" onSubmit={handleSignUp}>
-                <div className="form-group">
-                    <label htmlFor="first-name">First Name</label>
-                    <input
-                        type="text"
-                        id="first-name"
-                        className="form-input"
-                        placeholder="Enter your full name"
-                        onChange={(e) => setFirstName(e.target.value)}
-                        required
-                    />
+        <div className="auth-page-wrapper">
+            <div className="auth-container">
+                <div className="auth-header">
+                    <h2>Create Account</h2>
+                    <p>Join us and start your journey today</p>
                 </div>
 
-                <div className="form-group">
-                    <label htmlFor="last-name">Last Name</label>
-                    <input
-                        type="text"
-                        id="last-name"
-                        className="form-input"
-                        placeholder="Enter your last name"
-                        onChange={(e) => setLastName(e.target.value)}
-                        required
-                    />
+                {error && <div className="error-message">{error}</div>}
+
+                <form className="auth-form" onSubmit={handleSignUp}>
+                    <div className="form-group">
+                        <label htmlFor="first-name">First Name</label>
+                        <input
+                            type="text"
+                            id="first-name"
+                            className="form-input"
+                            placeholder="Enter your first name"
+                            value={firstName}
+                            onChange={(e) => setFirstName(e.target.value)}
+                            required
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="last-name">Last Name</label>
+                        <input
+                            type="text"
+                            id="last-name"
+                            className="form-input"
+                            placeholder="Enter your last name"
+                            value={lastName}
+                            onChange={(e) => setLastName(e.target.value)}
+                            required
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="profile-pic">Profile Picture (Optional)</label>
+                        <input
+                            type="file"
+                            id="profile-pic"
+                            className="file-input"
+                            accept="image/*"
+                            onChange={(e) => setPic(e.target.files[0])}
+                        />
+                        {pic && <span className="file-name">{pic.name}</span>}
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="username">Username</label>
+                        <input
+                            type="text"
+                            id="username"
+                            className="form-input"
+                            placeholder="Choose a username"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            required
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="password">Password</label>
+                        <input
+                            type="password"
+                            id="password"
+                            className="form-input"
+                            placeholder="Create a password (min 8 characters)"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="confirm-password">Confirm Password</label>
+                        <input
+                            type="password"
+                            id="confirm-password"
+                            className="form-input"
+                            placeholder="Confirm your password"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            required
+                        />
+                    </div>
+
+                    <button type="submit" className="submit-btn">Sign Up</button>
+                </form>
+
+                <div className="auth-footer">
+                    Already have an account?
+                    <Link to="/signin" className="auth-link">Sign in</Link>
                 </div>
-
-                <div className="form-group">
-                    <label htmlFor="profile-pic">Profile Picture</label>
-                    <input
-                        type="file"
-                        id="profile-pic"
-                        accept="image/*"
-                        onChange={(e) => setPic(e.target.files[0])}
-                        style={{ color: 'white' }}
-                    />
-                </div>
-
-                <div className="form-group">
-                    <label htmlFor="username">Username</label>
-                    <input
-                        type="text"
-                        id="username"
-                        className="form-input"
-                        onChange={(e) => setUsername(e.target.value)}
-                        placeholder="Enter your username"
-                        required
-                    />
-                </div>
-
-                <div className="form-group">
-                    <label htmlFor="password">Password</label>
-                    <input
-                        type="password"
-                        id="password"
-                        className="form-input"
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder="Create a password"
-                        required
-                    />
-                </div>
-
-                <div className="form-group">
-                    <label htmlFor="confirm-password">Confirm Password</label>
-                    <input
-                        type="password"
-                        id="confirm-password"
-                        className="form-input"
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        placeholder="Confirm your password"
-                        required
-                    />
-                </div>
-
-                <button type="submit" className="submit-btn">Sign Up</button>
-            </form>
-
-            <div className="auth-footer">
-                Already have an account?
-                <Link to="/signin" className="auth-link">Sign in</Link>
             </div>
         </div>
     );

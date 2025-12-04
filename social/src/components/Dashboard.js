@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { SignedIn, SignedOut, useUser, useClerk } from '@clerk/clerk-react';
 import { useNavigate, Link } from 'react-router-dom';
 import CreatePost from './CreatePost';
@@ -31,8 +31,11 @@ const Dashboard = () => {
   const MASSIVE_KEY = process.env.REACT_APP_MASSIVE_API_KEY;
 
   const tickersFetchedRef = useRef(false);
-
-  const fetchTickers = async (symbols = ['AAPL','GOOGL','MSFT','AMZN','TSLA','NVDA','META']) => {
+  const currentUserId = user?.id || (() => { try { return JSON.parse(localStorage.getItem('user'))?.id; } catch { return null; } })();
+  const userFromStorage = JSON.parse(localStorage.getItem('user'));
+  const reputationScore = userFromStorage?.reputation_score || 0;
+  const postQuality = userFromStorage?.post_quality_avg || 0;
+  const fetchTickers = async (symbols = ['AAPL', 'GOOGL', 'MSFT', 'AMZN', 'TSLA', 'NVDA', 'META']) => {
     if (tickersFetchedRef.current) return; // already fetched
     tickersFetchedRef.current = true;
 
@@ -63,104 +66,16 @@ const Dashboard = () => {
     }
   };
 
-  // Fetch tickers ONCE on mount
   useEffect(() => {
-    fetchTickers(); // run once
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // empty dependency array = run once on mount
+    fetchTickers();
+  }, []);
 
-  // helper to identify current user id (falls back to localStorage if needed)
-  const currentUserId = user?.id || (() => {
-    try { return JSON.parse(localStorage.getItem('user'))?.id; } catch { return null; }
-  })();
+  useEffect(() => {
+    fetchTickers?.();
+    fetchPosts();
+  }, []);
 
-  // ---------- Reputation pipeline ----------
-  // env flag to avoid calling remote LLM from the client (set to true for local heuristic)
-  const USE_LOCAL_LLM = (process.env.REACT_APP_USE_LOCAL_LLM === 'true');
 
-  // Gather current user's posts (try API then fallback to local state)
-  const getUserPosts = async (userId) => {
-    // try backend first
-    try {
-      const res = await fetch(`/api/users/${encodeURIComponent(userId)}/posts`);
-      if (res.ok) {
-        const data = await res.json();
-        // assume data.results or array
-        return data.results || data || [];
-      }
-    } catch (err) {
-      console.warn('User posts fetch failed, falling back to local posts', err);
-    }
-    // fallback: filter in-memory posts state
-    return posts.filter(p => p.user?.id === userId);
-  };
-
-  // Local heuristic LLM (insecure, simple fallback)
-  const localHeuristicReputation = (userPosts) => {
-    if (!userPosts || userPosts.length === 0) return { reputation_score: 0, post_quality_avg: 0 };
-    // quality per post = normalized (likes_count*1 + comments_count*1 + length factor)
-    const qualities = userPosts.map(p => {
-      const likes = Number(p.likes_count || 0);
-      const comments = Number(p.comments_count || 0) || (p.comments ? p.comments.length : 0);
-      const lengthScore = Math.min(1, (p.content?.length || 0) / 280); // up to 1
-      return likes * 1.2 + comments * 1.0 + lengthScore * 2;
-    });
-    const post_quality_avg = qualities.reduce((a,b)=>a+b,0) / qualities.length;
-    // reputation scaled 0-100
-    const reputation_score = Math.max(0, Math.min(100, Math.round(post_quality_avg * 3)));
-    return { reputation_score, post_quality_avg: Number(post_quality_avg.toFixed(2)) };
-  };
-
-  // Main orchestrator: compute metrics via LLM (proxy) or local heuristic and update user record
-  const computeAndUpdateReputation = async (userId) => {
-    if (!userId) return;
-    try {
-      const userPosts = await getUserPosts(userId);
-
-      let metrics = null;
-      if (USE_LOCAL_LLM) {
-        metrics = localHeuristicReputation(userPosts);
-      } else {
-        // call backend LLM service - implement server-side to keep LLM keys secret
-        const res = await fetch('/api/llm/reputation', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ userId, posts: userPosts })
-        });
-        if (!res.ok) {
-          throw new Error(`LLM proxy failed ${res.status}`);
-        }
-        metrics = await res.json(); // expect { reputation_score, post_quality_avg }
-      }
-
-      if (!metrics) throw new Error('No metrics returned');
-
-      // Patch user with new metrics (adjust endpoint as needed)
-      const patchRes = await fetch(`/api/users/${encodeURIComponent(userId)}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          reputation_score: metrics.reputation_score,
-          post_quality_avg: metrics.post_quality_avg
-        })
-      });
-
-      if (!patchRes.ok) {
-        console.warn('Failed to update user metrics', await patchRes.text());
-      } else {
-        const updatedUser = await patchRes.json();
-        // update local storage + in-memory user if present
-        try {
-          localStorage.setItem('user', JSON.stringify(updatedUser));
-        } catch (e) { /* ignore */ }
-        // if you hold user in state, update it here (e.g., setUser(updatedUser))
-        console.log('Updated user reputation', metrics);
-      }
-    } catch (err) {
-      console.error('Reputation pipeline error', err);
-    }
-  };
-  // ---------- end reputation pipeline ----------
 
   const toggleExpand = (postId) => {
     setExpandedPosts(prev => prev.includes(postId) ? prev.filter(id => id !== postId) : [...prev, postId]);
@@ -172,7 +87,6 @@ const Dashboard = () => {
       setOpenComments(prev => ({ ...prev, [postId]: false }));
       return;
     }
-    // open -> fetch comments if not loaded
     setOpenComments(prev => ({ ...prev, [postId]: true }));
     if (!commentsMap[postId]) {
       await fetchComments(postId);
@@ -185,11 +99,9 @@ const Dashboard = () => {
       const res = await fetch(`http://localhost:5000/api/posts/${postId}/comments`);
       if (res.ok) {
         const data = await res.json();
-        // The backend returns { comments: [ { comment: {...}, replies: [...] }, ... ] }
         const formattedComments = data.comments.map(item => item.comment);
         setCommentsMap(prev => ({ ...prev, [postId]: formattedComments }));
 
-        // Pre-populate replies map
         const newReplies = {};
         data.comments.forEach(item => {
           if (item.replies && item.replies.length > 0) {
@@ -246,7 +158,6 @@ const Dashboard = () => {
   const handleDeleteComment = async (postId, commentId, commentUserId) => {
     if (commentUserId !== currentUserId) return;
     if (!window.confirm('Delete this comment?')) return;
-    // optimistic remove
     setCommentsMap(prev => ({ ...prev, [postId]: (prev[postId] || []).filter(c => c.id !== commentId) }));
     try {
       const res = await fetch(`http://localhost:5000/api/comments/${commentId}`, { method: 'DELETE' });
@@ -266,27 +177,28 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    // fetch posts once when user ID is present (depend on stable primitive)
     if (user?.id) fetchPosts();
   }, [user?.id]);
 
-  // avoid calling navigate during render; redirect when signed out
   useEffect(() => {
     if (!user) navigate('/signin');
   }, [user, navigate]);
 
+  // Fetch posts
   const fetchPosts = async () => {
+    setLoadingPosts(true);
     try {
-      setLoadingPosts(true);
-      // Fetch ALL posts from all users
-      const response = await fetch('http://localhost:5000/api/posts');
-
-      if (response.ok) {
-        const data = await response.json();
-        setPosts(data.posts || []);
+      const res = await fetch('http://localhost:5000/api/posts');
+      const text = await res.text();
+      let data = null;
+      if (text) {
+        try { data = JSON.parse(text); } catch { throw new Error('Invalid JSON from /api/posts'); }
       }
-    } catch (error) {
-      console.error('Error fetching posts:', error);
+      if (!res.ok) throw new Error((data && (data.message || data.error)) || `HTTP ${res.status}`);
+      const fetched = data.results || data || [];
+      setPosts(fetched.posts);
+    } catch (err) {
+      console.error('Fetch posts error', err);
     } finally {
       setLoadingPosts(false);
     }
@@ -306,7 +218,6 @@ const Dashboard = () => {
     try {
       const userId = JSON.parse(localStorage.getItem('user')).id;
 
-      // Optimistically update UI
       setPosts(posts.map(post => {
         if (post.id === postId) {
           return {
@@ -318,7 +229,6 @@ const Dashboard = () => {
         return post;
       }));
 
-      // Call API to toggle like
       const response = await fetch(`http://localhost:5000/api/posts/${postId}/like`, {
         method: 'POST',
         headers: {
@@ -339,7 +249,6 @@ const Dashboard = () => {
 
   const formatTimeAgo = (timestamp) => {
     if (!timestamp) return '';
-    // Handle Marshmallow DateTime dump which might be naive UTC string
     let timeStr = timestamp;
     if (typeof timeStr === 'string' && !timeStr.endsWith('Z') && !timeStr.includes('+') && !timeStr.includes('-')) {
       timeStr += 'Z';
@@ -483,6 +392,68 @@ const Dashboard = () => {
                 <span className="nav-icon">👤</span>
                 My Posts
               </button>
+
+              {/* Reputation Stats Card */}
+              <div style={{
+                marginTop: '20px',
+                padding: '15px',
+                background: 'rgba(255, 255, 255, 0.08)',
+                borderRadius: '12px',
+                border: '1px solid rgba(255, 255, 255, 0.1)'
+              }}>
+                <div style={{
+                  fontSize: '12px',
+                  color: 'rgba(255, 255, 255, 0.6)',
+                  marginBottom: '10px',
+                  fontWeight: '500'
+                }}>
+                  YOUR STATS
+                </div>
+                <div style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '8px'
+                }}>
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between'
+                  }}>
+                    <span style={{ fontSize: '13px', color: 'rgba(255, 255, 255, 0.8)' }}>
+                      ⭐ Reputation
+                    </span>
+                    <span style={{
+                      fontSize: '16px',
+                      fontWeight: '700',
+                      color: '#fff',
+                      background: 'rgba(59, 130, 246, 0.2)',
+                      padding: '2px 8px',
+                      borderRadius: '6px'
+                    }}>
+                      {reputationScore}
+                    </span>
+                  </div>
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between'
+                  }}>
+                    <span style={{ fontSize: '13px', color: 'rgba(255, 255, 255, 0.8)' }}>
+                      📊 Quality
+                    </span>
+                    <span style={{
+                      fontSize: '16px',
+                      fontWeight: '700',
+                      color: '#fff',
+                      background: 'rgba(16, 185, 129, 0.2)',
+                      padding: '2px 8px',
+                      borderRadius: '6px'
+                    }}>
+                      {postQuality.toFixed(1)}
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <button className="signout-btn" onClick={handleSignOut}>
@@ -683,6 +654,7 @@ const Dashboard = () => {
                                 </div>
                               </div>
                             ))}
+
                             <div className="comment-form">
                               <textarea
                                 value={commentInput[post.id] || ''}
@@ -723,6 +695,7 @@ const Dashboard = () => {
               </div>
 
               <CreatePost
+                posts={Array.isArray(posts) ? posts : [posts]}
                 onSuccess={handlePostCreated}
                 onCancel={() => setShowModal(false)}
               />

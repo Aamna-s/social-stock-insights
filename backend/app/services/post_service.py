@@ -19,11 +19,10 @@ class PostService:
                 symbol_id=symbol_id.to_dict()['id'],
                 image_attachment= data.get('imageAttachment', None),
                 created_at = datetime.now())
+        db.session.add(post)
+        db.session.commit()
         user = User.query.filter_by(id = data['userId']).first_or_404()
         user.post_count = user.post_count +1
-        # user.post_quality_avg = data['postQualityAvg']
-        # user.reputation_score = data['reputationScore']
-        db.session.add(post)
         db.session.commit()
 
         return post

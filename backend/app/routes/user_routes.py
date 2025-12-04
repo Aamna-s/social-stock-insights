@@ -37,3 +37,17 @@ def init_routes(app):
             return jsonify({'error': str(e)}), 404
         except Exception as e:
             return jsonify({'error': 'An error occurred while fetching the user'}), 500
+
+    @app.route('/api/users/<userId>/score', methods=['POST'])
+    def update_score(userId):
+        try:
+            data = request.get_json()
+            user = UserService.update_score(userId, data)
+            schema = UserPublicSerializer()
+            return jsonify({'user': schema.dump(user)}), 200
+
+        except ValueError as e:
+            return jsonify({'error': str(e)}), 404
+
+        except Exception as e:
+            return jsonify({'error': 'An error occurred while fetching the user'}), 500

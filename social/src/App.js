@@ -26,14 +26,24 @@ function App() {
         <div className="App">
           <Routes>
             <Route path="/signin" element={
-              <SignedOut>
-                <SignIn />
-              </SignedOut>
+              <>
+                <SignedOut>
+                  <SignIn />
+                </SignedOut>
+                <SignedIn>
+                  <Navigate to="/dashboard" replace />
+                </SignedIn>
+              </>
             } />
             <Route path="/signup" element={
-              <SignedOut>
-                <SignUp />
-              </SignedOut>
+              <>
+                <SignedOut>
+                  <SignUp />
+                </SignedOut>
+                <SignedIn>
+                  <Navigate to="/dashboard" replace />
+                </SignedIn>
+              </>
             } />
             <Route
               path="/dashboard"

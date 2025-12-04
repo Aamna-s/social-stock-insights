@@ -16,3 +16,10 @@ class UserService:
     def getUser( username):
         user = User.query.filter_by(username=username).first_or_404()
         return user
+
+    def update_score(userId, data):
+        user = User.query.filter_by(id = userId).first_or_404()
+        user.post_quality_avg = data['postQualityAvg']
+        user.reputation_score = data['reputationScore']
+        db.session.commit()
+        return user
