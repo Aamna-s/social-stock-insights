@@ -5,7 +5,7 @@ pycache
 **/reports/
 .DS_Store
 .idea
-*.env
+.env
 /user_scripts/*.json
 /user_scripts/*.png
 /user_scripts/*.sql
